@@ -5,10 +5,14 @@
 #include <stdlib.h> // library to use rand() and get pseudo-random number
 #include<time.h>    // used for srand()
 
-// Question: Why are the macros not working?
+// Question: Why are some macros not working?
 // define macros
 // #define MAX_NUMBER 10
 // #define RANDOM_NUMBER
+#define TOO_LOW "Your guess is too low \n"
+#define TOO_HIGH "Your guess is too high \n"
+#define PLAY_AGAIN "Do you want to play again? Press 1 for yes \n"
+#define GUESS "Guess a number from 1-100 \n"
 
 int main(void)
 {
@@ -24,8 +28,7 @@ int main(void)
 
 	do
 	{
-		printf("%s", "Guess a number from 1-100 \n");
-		printf("%d%s", RANDOM_NUMBER, "\n");
+		printf("%s", GUESS);
 		scanf_s("%d", &input);
 
 		nrOfGuesses++; 	// Number of guesses increases by 1 by each guess
@@ -35,7 +38,7 @@ int main(void)
 		if (input == RANDOM_NUMBER)
 		{
 			printf("%s %d %s", "You have guessed", nrOfGuesses, "times and your guess is correct \n");
-			printf("Do you want to play again? Press 1 for yes \n");
+			printf(PLAY_AGAIN);
 			scanf_s("%d", &input);
 
 			// Handles case when the user wants to play again
@@ -59,12 +62,12 @@ int main(void)
 		// Handles case when user input guess is lower than correct answer
 		else if (input < RANDOM_NUMBER)
 		{
-			printf("Your guess is too low \n");
+			printf(TOO_LOW);
 		}
 		// Handles case when user input guess is higher than correct answer
 		else if (input > RANDOM_NUMBER)
 		{
-			printf("Your guess is too high \n");
+			printf(TOO_HIGH);
 		}
 
 		// While will happen when:
