@@ -5,10 +5,8 @@
 #include <stdlib.h> // library to use rand() and get pseudo-random number
 #include<time.h>    // used for srand()
 
-// Question: Why are some macros not working?
 // define macros
-// #define MAX_NUMBER 10
-// #define RANDOM_NUMBER
+#define MAX_NUMBER 100
 #define TOO_LOW "Your guess is too low \n"
 #define TOO_HIGH "Your guess is too high \n"
 #define PLAY_AGAIN "Do you want to play again? Press 1 for yes \n"
@@ -20,8 +18,7 @@ int main(void)
 	srand(time(0));
 
 	// Question: Is it fine with pseudo-random? Is it a problem that it seems to give a number from low to high?
-	int RANDOM_NUMBER = rand() % 100 + 1; 	// rand() gives a pseudo-random number, remainder of 100 + 1 to get a number between 1 and 100
-	int MAX_NUMBER = 10; // Max number of times the user is allowed to guess
+	int randomNumber = rand() % MAX_NUMBER + 1; // rand() gives a pseudo-random number, remainder of 100 + 1 to get a number between 1 and 100
 	int input;			 // User input from scanf
 	int nrOfGuesses = 0; // How many times the user has guessed, default 0
 	int play = 1;		 // As long as play is 1 the game will play, default 1
@@ -29,24 +26,23 @@ int main(void)
 	do
 	{
 		printf("%s", GUESS);
-		scanf_s("%d", &input);
+		printf("%d", randomNumber);
+		scanf("%d", &input);
 
 		nrOfGuesses++; 	// Number of guesses increases by 1 by each guess
-		MAX_NUMBER--;	// Max number of guesses decreases by 1 by each guess
 
 		// Handles case when user input is a correct guess
-		if (input == RANDOM_NUMBER)
+		if (input == randomNumber)
 		{
 			printf("%s %d %s", "You have guessed", nrOfGuesses, "times and your guess is correct \n");
 			printf(PLAY_AGAIN);
-			scanf_s("%d", &input);
+			scanf("%d", &input);
 
 			// Handles case when the user wants to play again
 			if (input == 1)
 			{
-				// Creates new random numbers and a new seed for the next game
-				srand(time(0));
-				RANDOM_NUMBER = rand() % 100 + 1;
+				// Creates new random numbers for the next game
+				randomNumber = rand() % MAX_NUMBER + 1;
 				play = 1;
 			}
 
@@ -60,21 +56,21 @@ int main(void)
 			nrOfGuesses = 0;
 		}
 		// Handles case when user input guess is lower than correct answer
-		else if (input < RANDOM_NUMBER)
+		else if (input < randomNumber)
 		{
 			printf(TOO_LOW);
 		}
 		// Handles case when user input guess is higher than correct answer
-		else if (input > RANDOM_NUMBER)
+		else if (input > randomNumber)
 		{
 			printf(TOO_HIGH);
 		}
 
 		// While will happen when:
 		// 1. It's the first round or the user wants to play again after one round
-		// 2. Max number of guesses reach 0
+		// 2. Max number of guesses is smaller as max number
 		// 3. User input is between 1 to 100
-	} while (play == 1 && MAX_NUMBER > 0 && input >= 0 && input <= 100);
+	} while (play == 1 && MAX_NUMBER > nrOfGuesses && input >= 0 && input <= 100);
 
 	// TODO OPTIONAL: secure that the program does not fail (crashes) if a user by accident inputs a 
 	//				  number outside of the range or a character / string
