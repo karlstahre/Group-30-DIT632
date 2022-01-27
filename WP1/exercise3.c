@@ -1,6 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 1
 // Exercise 3
+// Submission code: 920759
 #include <stdio.h>
 #include <stdlib.h> // library to use rand() and get pseudo-random number
 #include<time.h>    // used for srand()
