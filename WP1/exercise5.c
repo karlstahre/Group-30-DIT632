@@ -1,6 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 1
 // Exercise 5
+// Submission code: 920759
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h> // Library used for generating random numbers
