@@ -1,6 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 1
 // Exercise 4
+// Submission code: 920759
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h> // library used for getting max and min value of data types
