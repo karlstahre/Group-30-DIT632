@@ -1,6 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 1
 // Exercise 2
+// Submission code: 920759
 /* At the beginning of the program we include the libraries containing the functions we will
 need to use throughout the program */
 /* The standard input output library contains the printf(), fgets() function and stdin
