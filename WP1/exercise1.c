@@ -1,6 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 1
 // Exercise 1
+// Submission code: 920759
 #include <stdio.h>
 
 /* These lines are existing sentences that will be printed by the program once the user
