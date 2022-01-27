@@ -11,13 +11,13 @@
 
 // This function generates a set of random numbers
 // and fills the table *tab with these numbers
-int* create_random(int* tab);
+void create_random(int* tab);
 
 // This function takes the *tab of random numbers
-// and creates a table with the frequency counts for these numbers
+// and fills the freq array with the frequency counts for these numbers
 // freq[number] will hold how many times the number occurred
 // Example: if 0 occurred 7 times: freq[0] = 7
-int* count_frequency(int* tab, int* freq);
+void count_frequency(int* tab, int* freq);
 
 // This function takes the frequency count table
 // and draws a histogram of the values in that frequency table
@@ -27,34 +27,35 @@ void draw_histogram(int* freq);
 
 // ------ Main --------------------------
 // The main entry point for the program
-int main(void) {
-	int table[MAX], n; // Question: what is n?
+int main(void)
+{
+	// Declaration of arrays with size of the array according to macros
+	int table[MAX];
 	int frequency[MAXNUMBER];
-	// table = create_random(table); // Question: why doesn't this work?
-	//int* tab = create_random(table);
-	//int* freq = count_frequency(tab, frequency);
-	draw_histogram(count_frequency(create_random(table), frequency));
+
+	create_random(table);
+	count_frequency(table, frequency);
+	draw_histogram(frequency);
 }
 
 // ------ create_random --------------------------
-int* create_random(int* tab) 
+void create_random(int* tab)
 {
 	// Use current time as seed for random generator
 	srand(time(0));
 
 	// Iterate through the table
-	for (int i = 0; i < MAX; i++) 
+	for (int i = 0; i < MAX; i++)
 	{
 		// Generate random number between 0 - MAXNUMBER
 		int aNumber = rand() % MAXNUMBER;
 		// Store generated number in the table
 		tab[i] = aNumber;
 	}
-	return tab;
 }
 
 // ------ count_frequency --------------------------
-int* count_frequency(int* tab, int* freq)
+void count_frequency(int* tab, int* freq)
 {
 	// Iterate through the array of frequency setting all occurrencies at 0
 	for (int i = 0; i < MAXNUMBER; i++)
@@ -69,7 +70,7 @@ int* count_frequency(int* tab, int* freq)
 		// Increase by 1 the content of frequency at position of the current number
 		freq[aNumber] += 1;
 	}
-	return freq;
+	//return freq;
 }
 
 // ------ draw_histogram --------------------------
@@ -81,14 +82,15 @@ void draw_histogram(int* freq)
 		// Handles case if number has occurred at least once
 		if (freq[i] > 0)
 		{
-			// Prints out histogram bar for that number
+			// Prints out the current number and a tab for spacing
 			printf("%d\t", i);
+			// Prints out one x for each occurrency of that number
 			for (int j = 0; j < freq[i]; j++)
 			{
 				printf("%s", "x");
 			}
 			printf("\n");
-			
+
 		}
 	}
 }
