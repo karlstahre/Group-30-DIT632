@@ -11,6 +11,7 @@
 #define SENTENCE3 "Här är brev från älsklingsgrabben\n\n"
 #define SENTENCE4 "Det är bra här i kolonien\n\n"
 #define SENTENCE5 "Vi är 28 gangstergrabbar i en stor barrack\n\n"
+#define WELCOME "Please enter a number between 1 - 5\n"
 
 /* This program urges the user to enter a number between 1 and 5, which it stores in an
 int variable and then prints any of the five sentences defined as macros above, dependent
@@ -27,7 +28,7 @@ void main(void) {
 	do {
 
 		/* This print method urges the user to enter a number between 1 and 5 */
-		printf("Please enter a number between 1 - 5\n\n");
+		printf("%s\n", WELCOME);
 
 		/* This method reads the user input and stores it in the input variable defined
 		above */
