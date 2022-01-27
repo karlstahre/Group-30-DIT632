@@ -6,11 +6,11 @@
 /* These lines are existing sentences that will be printed by the program once the user
 	enters a number between 1 and 5. Define are defined as macros on top of the rest of
 	the code to be referenced further down. */
-#define SENTENCE1 "Hejsan morsan\n\n"
-#define SENTENCE2 "Hejsan stabben\n\n"
-#define SENTENCE3 "Här är brev från älsklingsgrabben\n\n"
-#define SENTENCE4 "Det är bra här i kolonien\n\n"
-#define SENTENCE5 "Vi är 28 gangstergrabbar i en stor barrack\n\n"
+#define SENTENCE1 "Hejsan morsan\n"
+#define SENTENCE2 "Hejsan stabben\n"
+#define SENTENCE3 "Här är brev från älsklingsgrabben\n"
+#define SENTENCE4 "Det är bra här i kolonien\n"
+#define SENTENCE5 "Vi är 28 gangstergrabbar i en stor barrack\n"
 #define WELCOME "Please enter a number between 1 - 5\n"
 
 /* This program urges the user to enter a number between 1 and 5, which it stores in an
@@ -38,23 +38,23 @@ void main(void) {
 		i.e. if the user entered any of the numbers between 1 and 5 allowed */
 		if (input == 1) {
 			/* If the input is 1 the program prints the first sentence to the user */
-			printf(SENTENCE1);
+			printf("%s\n", SENTENCE1);
 		}
 		else if (input == 2) {
 			/* If the input is 2 the program prints the second sentence to the user */
-			printf(SENTENCE2);
+			printf("%s\n", SENTENCE2);
 		}
 		else if (input == 3) {
 			/* If the input is 3 the program prints the third sentence to the user */
-			printf(SENTENCE3);
+			printf("%s\n", SENTENCE3);
 		}
 		else if (input == 4) {
 			/* If the input is 4 the program prints the fourth sentence to the user */
-			printf(SENTENCE4);
+			printf("%s\n", SENTENCE4);
 		}
 		else if (input == 5) {
 			/* If the input is 5 the program prints the fifth sentence to the user */
-			printf(SENTENCE5);
+			printf("%s\n", SENTENCE5);
 		}
 
 	/* If the condition that the input should be a number between 1 and 5 is not satisfied,
