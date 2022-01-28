@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
     else if (strcmp(argv[1], "-h") == 0)
     {
         printf("%s", HELP); // Output help message
+        return 0;
     }
     // Handles case where user input is a character or a string or a number format that is not binary
     else if ((strcmp(argv[1], "0") != 0 && binary == 0) || isBinary(argv[1]) == 0)
@@ -57,9 +58,10 @@ int main(int argc, char* argv[])
         printf("%s", CONVERSION_UNSUCCESSFUL); // Output error message if the conversion was not successful
         return 2;
     }
-    
-    toHexadecimal(binary); // Convert binary number to hexadecimal
-
+    else 
+    {
+        toHexadecimal(binary); // Convert binary number to hexadecimal
+    }
 }
 
 // ------ fillArray --------------------------
