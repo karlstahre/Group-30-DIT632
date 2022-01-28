@@ -12,6 +12,9 @@
 #define SIZE_8 8
 #define SIZE_16 16
 #define SIZE_32 32
+#define PROMPT_1 "Please provide one argument" // Displays when the user provides more or less than one argument
+#define PROMPT_2 "Please provide a decimal number to convert to binary" // Displays when the user enters "-h" to get help
+#define NO_SUCCESS "The conversion was not successful" // Displays when conversion was not possible due to out of range, string provided or any other potential issue
 
 // ------ Function declarations ----------
 
@@ -35,12 +38,12 @@ int main(int argc, char* argv[])
     // Handles case where the number of arguments provided exeeds or is lower that one
     if (argc < 2 || argc > 2)
     {
-        printf("Please provide one argument");
+        printf("%s", PROMPT_1);
     }
     // Handles case where the user types "-h" and wants help
     else if (strcmp(argv[1], "-h") == 0)
     {
-        printf("Please provide a decimal number to convert to binary");
+        printf("%s", PROMPT_2);
     }
     // Handles case where if the value provided was out of range, 
     // or if letters are provided instead of a number,
@@ -49,7 +52,7 @@ int main(int argc, char* argv[])
     else if (errno == ERANGE || (strcmp(argv[1], "0") != 0 && input == 0))
     {
         // output an error message if the conversion was not successful
-        printf("%s", "The conversion was not successful");
+        printf("%s", NO_SUCCESS);
         return 2;
     }
     // Handles case where input should be larger or equal to 0 and smaller or equal to the maximum value of datatype long
@@ -87,7 +90,7 @@ int main(int argc, char* argv[])
     // Handles any other case that may occur
     else
     {
-        printf("%s", "The conversion was not successful");
+        printf("%s", NO_SUCCESS);
         return 2;
     }
 }
@@ -114,7 +117,7 @@ void toBinary(long decimalNo, char arr[], int size)
 }
 
 // ------ count_bits --------------------------
-// https://www.includehelp.com/cpp-programs/find-total-number-of-bits-required-to-represent-a-number-in-binary.aspx
+// Code inspired by: https://www.includehelp.com/cpp-programs/find-total-number-of-bits-required-to-represent-a-number-in-binary.aspx
 long countBits(long decimalNo)
 {
     long count = 0; // Variable to store a counter of how many bits there are, default 0
