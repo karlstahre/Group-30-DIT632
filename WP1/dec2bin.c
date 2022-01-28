@@ -39,11 +39,13 @@ int main(int argc, char* argv[])
     if (argc < 2 || argc > 2)
     {
         printf("%s", PROMPT_1);
+        return 2;
     }
     // Handles case where the user types "-h" and wants help
     else if (strcmp(argv[1], "-h") == 0)
     {
         printf("%s", PROMPT_2);
+        return 0;
     }
     // Handles case where if the value provided was out of range, 
     // or if letters are provided instead of a number,
@@ -86,7 +88,6 @@ int main(int argc, char* argv[])
         }
         return 0;
     }
-    // Question: Is it fine to assume that something else could happen or should we always be able to justify?
     // Handles any other case that may occur
     else
     {
