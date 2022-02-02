@@ -136,7 +136,6 @@ int isArgumentsCorrect(int argc, char* argv[])
         // Handles case where wrong amount of arguments is provided
     else if (argc != REQUIRED_ARGS)
     {
-        printf("%s, %d", "This many args", argc);
         printf("%s", WRONG_ARGS_AMOUNT);
         return 0;
     }
