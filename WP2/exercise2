@@ -1,0 +1,166 @@
+// (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
+// Work package 2
+// Exercise 2
+// Submission code: xxxxxx
+
+/* Here are the libraries used in this program, most notably the time.h library is used to get pseudo-random numbers */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+//#### Constants #####
+#define MAX 5
+#define MAX_RANDOM_NUMBER 101
+#define NEW_DATUM 42
+#define INSTRUCTION1 "This is a randomly generated linked list"
+#define INSTRUCTION2 "This is the same list as above but with the number 42 added in front of it"
+
+// ##### typedefs ####
+
+/* The struct q constitute the individual nodes used to make a doubly linked list in the program,
+ * referenced by REGTYPE */
+typedef struct q{
+    int number;
+    struct q *next;
+    struct q *prev;
+} REGTYPE;
+
+// ##### Function declarations #####
+REGTYPE* random_list(void);
+REGTYPE* add_first(REGTYPE* temp, int data);
+int randomInt(void);
+void addRecord(REGTYPE **head);
+void test(REGTYPE *head, REGTYPE *act_post, int nr);
+
+//###### Main program #######
+int main(int argc, char *argv[])
+{
+    /* int variable passed as argument to the test() function */
+    int nr=0;
+    /* initializes pointers to two doubly linked nodes */
+    REGTYPE *act_post=NULL, *head=NULL;
+
+    srand(time(0)); // Random seed
+
+    /* Explanatory message to user */
+    printf("\n%s\n", INSTRUCTION1);
+    /* Generates a random linked list */
+    head=random_list();
+    /* Prints out the linked list */
+    test(head, act_post, nr);
+
+    /* Explanatory message to user */
+    printf("\n%s\n", INSTRUCTION2);
+    /* Adds a node with the number 42 in front of the other nodes in the linked list */
+    head=add_first(head, NEW_DATUM);
+    /* Prints out the updated linked list */
+    test(head, act_post, nr);
+
+// --- Free the allocated memory ---
+    while((act_post=head)!=NULL){
+        /* loops through nodes in order to free up their allocated memory */
+        head=act_post->next;
+        free(act_post);
+    }
+
+    /* terminates program */
+    return 0;
+}
+// ==== End of main ======================================
+
+// ==== Functions ======================================
+
+/* Generates and returns a random number between 0 and 100 */
+int randomInt(){
+    int integer = rand() % MAX_RANDOM_NUMBER;
+    return integer;
+}
+
+/* initializes and adds a node of type REGTYPE to the linked list whose head node gets passed as an argument */
+void addRecord(REGTYPE **head){
+    /* allocates memory for new node to be appended to the list */
+    REGTYPE* newRecord = (REGTYPE*)malloc(sizeof(REGTYPE));
+    /* initializes new variable to store the pointer to head (last) node */
+    REGTYPE* lastRecord = *head;
+    /* initializes the number attribute of the node to be appended to the linked list to a random number */
+    newRecord->number=randomInt();
+    /* initializes the next attribute of the new node to NULL */
+    newRecord->next=NULL;
+
+    /* if the function gets called for any other but the first time in the loop, then the head node already has a next
+     * attribute that is not null, i.e. the second or third node etc., so then the pointer to the last record needs to
+     * be moved to the next node until it encounters the node whose next attribute is null, i.e. the last link in the
+     * list*/
+    while(lastRecord->next!=NULL){
+        lastRecord = lastRecord->next;
+    }
+
+    /* appends new node to linked list, making it the next node to the last node */
+    lastRecord->next=newRecord;
+    /* appends new node to linked list, making the last node its previous node*/
+    newRecord->prev=lastRecord;
+}
+
+/* generates a doubly linked list of five nodes with random integers as value */
+REGTYPE* random_list(void ){
+
+    /* This first block of code sets up the starting node of the random list */
+
+    /* declares a REGTYPE struct and two REGTYPE-type pointers */
+    REGTYPE node, *head, *next;
+    /* stores address of node REGTYPE in head pointer */
+    head = &node;
+    /* initializes next pointer to NULL */
+    next = NULL;
+    /* allocates memory for the initial node */
+    head = (REGTYPE *)malloc(sizeof(REGTYPE));
+    /* inserts random number into the head node's number attribute */
+    head->number = randomInt();
+    /* points head node's next attribute to next pointer */
+    head->next=next;
+    /* initializes head node's prev attribute to NULL */
+    head->prev=NULL;
+
+    /* This loop calls the addRecord method for every node to be added to the linked list */
+
+    for (int i = 0; i < MAX; i++){
+        addRecord(&head);
+    }
+
+    /* returns the head node of the random linked list */
+    return(head);
+}
+
+//==========================================================
+/* this function adds a node with value of 42 in front of the linked list whose head node ot takes as argument */
+REGTYPE* add_first(REGTYPE* temp, int data){
+
+    /* allocates space for new head node */
+    REGTYPE* newHead = (REGTYPE*)malloc(sizeof(REGTYPE));
+    /* adds input data as number in new head node */
+    newHead->number=data;
+    /* connects the new node to the linked list*/
+    newHead->next=temp;
+    /* sets the new node as the outermost since its previous node is null */
+    newHead->prev=NULL;
+    /* connects the new node to the linked list, making it doubly linked, and in the first position */
+    temp->prev=newHead;
+    /* connects the temp pointer to the new node in the first position, thus returning the new "head" REGTYPE*/
+    temp = newHead;
+    return temp;
+}
+
+/* This function "tests" the linked lists generated by the program by printing them to the user. This code has been
+ * moved from the main method with single responsibility and separation of concerns on mind */
+void test(REGTYPE *head, REGTYPE *act_post, int nr){
+
+    /*sets the actual position pointer to point to the head node */
+    act_post=head;
+
+    /* loops over all nodes in th list, and prints their number value to the user */
+    while( act_post!=NULL){
+        printf("\n Post nr %d : %d" , nr++, act_post->number);
+        act_post=act_post->next;
+    }
+    printf("\n");
+}
