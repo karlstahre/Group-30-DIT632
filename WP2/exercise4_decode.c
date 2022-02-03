@@ -60,10 +60,10 @@ void unpackByteToBits(unsigned char decimalValue, unsigned char bits[]);
 void printOutputTable(unsigned char bits[]);
 
 // This method checks the arguments provided by the user
-// Returns 1 if REQUIRED_ARGS are provided and in decimal format
-// Example: 1 2 2 1 1 => Returns 1
+// Returns 1 if REQUIRED_ARGS are provided and in hex format
+// Example: AB => Returns 1
 // Returns 0 otherwise, including "-h" input for help
-// Note: needs isArgumentsDecimal() and isArgumentsWithinRange() to function
+// Note: needs isArgumentsHex() to function
 int isArgumentsCorrect(int argc, char* argv[]);
 
 // This method checks the format of the argument provided by the user
