@@ -1,6 +1,6 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 2
-// Exercise 4 part 1 (code.c)
+// Exercise 4 part 2 (decode.c)
 // Submission code: xxxxxx
 
 #include <stdio.h>          // Library used for printf() and others
