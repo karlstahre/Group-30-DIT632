@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     if (isArgumentsCorrect(argc, argv))
     {
         unsigned char packedByte = packBitsToByte(argv);    // Store packed byte into unsigned char
-        printf("%x", packedByte);                    // Print packed byte in hexadecimal format
+        printf("%X", packedByte);                           // Print packed byte in hexadecimal format
         return 0;
     }
         // Handles case where arguments are not provided correctly
