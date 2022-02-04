@@ -3,11 +3,11 @@
 // Exercise 3
 // Submission code:
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <string.h> // Library used for strcmp and strcpy
 
 // define macros
+// The user is prompt with different strings depending on the situation
 #define INSTRUCTIONS "Choose one option: \n 1 Create a new and delete the old file \n 2 Add a new person to the file \n 3 Search for a person in the file \n 4 Print out all in the file \n 5 Exit the program \n" // The user is prompt with 5 choices to choose from
 #define SEARCH "Search for a person in the file by firstname or lastname\n"
 #define ENTER_DATA "Enter firstname, lastname and personal number\n"
@@ -26,7 +26,7 @@ typedef struct {
 } PERSON;
 
 // ----- Global variables ---------------
-FILE *database;
+FILE *database; // Stream to the file
 
 // ------ Function declarations ---------
 PERSON input_record(void);              // Reads a person’s record
@@ -109,6 +109,7 @@ PERSON input_record(void)
         strcpy( newEntry.firstname, fname);
         strcpy( newEntry.famname, lname);
         strcpy( newEntry.pers_number, pers_nr);
+        // Returns the new person
         return newEntry;
     } else {
         // Prints error message when the user doesn't provide the correct amount of variables
@@ -229,6 +230,9 @@ void search_by_name(char *name)
 // ------ append_file ---------------------------
 void append_file(PERSON *inrecord)
 {
+    // Opens binary file in append mode to add record at the end of the file
+    database = fopen("database.bin", "ab");
+
     // Checks if the file exists
     if (database == NULL)
     {
@@ -236,10 +240,7 @@ void append_file(PERSON *inrecord)
     }
     else
     {
-        // Opens binary file in append mode to add record at the end of the file
-        database = fopen("database.bin", "ab");
-
-        // Write record
+        // Writes record
         fwrite(inrecord, sizeof(PERSON), 1, database);
 
         // Closes file
