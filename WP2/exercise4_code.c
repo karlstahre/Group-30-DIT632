@@ -1,7 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 2
 // Exercise 4 part 1 (code.c)
-// Submission code: xxxxxx
+// Submission code: 960059
 
 #include <stdio.h>          // Library used for printf() and others
 #include <stdlib.h>         // Library used for strtol()
