@@ -1,7 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 2
 // Exercise 2
-// Submission code: xxxxxx
+// Submission code: 960059
 
 /* Here are the libraries used in this program, most notably the time.h library is used to get pseudo-random numbers */
 #include <stdio.h>
