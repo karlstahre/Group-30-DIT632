@@ -1,20 +1,26 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 2
 // Exercise 1
-// Submission code:
+// Submission code: 960059
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> // Library for printf() and others
+#include <stdlib.h> // Library for memory allocation
+#include <string.h> // Library used for strlen()
+#include <stdbool.h> // Library used for bool type
 
 // define macros
 #define MAX_NUMBER 99 // Maximum x and y position
 #define MIN_NUMBER 0  // Minimum x and y position
 #define ARRAY_SIZE 30 // Size of the instructions of 'm' and 't' that the user provides
+#define START_X_POS 0 // Starting x position for initializing the robot
+#define START_Y_POS 0 // Starting y position for initializing the robot
 // The user is prompt with different stings depending on the situation
 #define INSTRUCTIONS "Provide a string with instructions where m means move one space and t means turn 90 degree\n"
 #define START_POSITION "Provide a starting position for x and y with a number from 0 to 99\n"
-#define END_POSITION "The robot's end position is:\n"
+#define END_POSITION "The robot's end position is:"
+#define END_DIRECTION "Current direction:"
 #define WRONG_NUMBER "Not accepted number\n"
+#define WRONG_INSTRUCTIONS "Provide only 'm's and 't's as the input string\n"
 
 // ----- Enums -------------------------
 enum DIRECTION {N,O,S,W};
@@ -29,14 +35,16 @@ typedef struct {
 // ------ Function declarations ---------
 void move(ROBOT* robot); // Move one step in current direction
 void turn(ROBOT* robot); // Turn direction 90 degrees clockwise
+char enumToChar(enum DIRECTION dir); // Returns a character according to the current direction passed as argument
+bool isInstructionsValid(char instructions[]); // Returns true iff instructions provided as string are only 'm's or 't's
 
 // ------ Function definitions ----------
 
 // ------ Main --------------------------
 int main(void)
 {
-    int x_position = 0; // Variable to store user input x value
-    int y_position = 0; // Variable to store user input y value
+    int x_position = START_X_POS; // Variable to store user input x value
+    int y_position = START_Y_POS; // Variable to store user input y value
     char instructions[ARRAY_SIZE]; // Variable to store user input instructions with m and t
 
     do {
@@ -45,48 +53,55 @@ int main(void)
         // Scans user input for x and y position
         scanf("%d %d", &x_position, &y_position);
         // Handles case when the x and y positions are too large or too small, i.e. when they're smaller than 0 and larger than 99
-        if (x_position < MIN_NUMBER || x_position > MAX_NUMBER || y_position < MIN_NUMBER || y_position > MAX_NUMBER)
+
+        // This only happens when x and y positions are within accepted range and there's no EOF character
+        if (x_position >= MIN_NUMBER && x_position <= MAX_NUMBER && y_position >= MIN_NUMBER && y_position < MAX_NUMBER && !feof(stdin))
         {
-            printf("%s", WRONG_NUMBER);
-        }
-        // Handles case when the x and y positions are within accepted range
-        else
-        {
+            // Creates a new robot
+            ROBOT* robot;
+            robot = malloc(sizeof(ROBOT)); // Allocate space in memory
+            robot->ypos = y_position; // Updates y position to user input
+            robot->xpos = x_position; // Updates x position to user input
+            robot->dir = N; // Default starting direction set to N
+
             // Ask for a string with "t"s and "m"s
             printf("%s", INSTRUCTIONS);
             // Scan user input for instructions
             scanf("%s", &instructions);
-        }
-        // This only happens when x and y positions are within accepted range and there's no EOF character
-        if (x_position >= MIN_NUMBER && x_position <= MAX_NUMBER && y_position >= MIN_NUMBER && y_position < MAX_NUMBER && !feof(stdin))
-        {
-        // Creates a new robot
-        ROBOT* robot;
-        robot = malloc(sizeof(ROBOT)); // Allocate space in memory
-        robot->ypos = y_position; // Updates y position to user input
-        robot->xpos = x_position; // Updates x position to user input
-        robot->dir = 0; // Default starting direction set to N
 
-            // Iterate over the instructions to get character by character and pass them into the correct functions
-            for (int i = 0; i < sizeof instructions; i++)
+            // Handles case when instructions string are provided correctly (only 'm's or 't's)
+            if (isInstructionsValid(instructions))
             {
-                // If the characters at the given position are 'm' or 't', the program calls the functions
-                // move or turn depending on the character
-                if (instructions[i] == 'm')
+                // Iterate over the instructions to get character by character and pass them into the correct functions
+                for (int i = 0; i < sizeof instructions; i++)
                 {
-                    // Function call
-                    move(robot);
+                    // If the characters at the given position are 'm' or 't', the program calls the functions
+                    // move or turn depending on the character
+                    if (instructions[i] == 'm')
+                    {
+                        // Function call to move robot
+                        move(robot);
+                    }
+                    else if (instructions[i] == 't')
+                    {
+                        // Function call to turn robot
+                        turn(robot);
+                    }
                 }
-                else if (instructions[i] == 't')
-                {
-                    // Function call
-                    turn(robot);
-                }
+                // Prints the final x and y position, as well as its end direction
+                printf("%s %d %d\n", END_POSITION, robot->xpos, robot->ypos);
+                printf("%s %c\n", END_DIRECTION, enumToChar(robot->dir));
+                free(robot); // Frees space in the memory
             }
-            // Prints the final x and y position
-            printf("%s", END_POSITION);
-            printf("%d %d \n", robot->xpos, robot->ypos);
-            free(robot); // Frees space in the memory
+                // Handles case where wrong string instructions were provided (e.g., "mlmt")
+            else
+            {
+                printf("%s", WRONG_INSTRUCTIONS);
+            }
+        }
+            //Handles case where number outside defined ranges was provided as starting position, and not eof (i.e., ctrl+z)
+        else if (!feof(stdin)){
+            printf("%s", WRONG_NUMBER);
         }
         // The program runs until it encounters the EOF character
     } while (!feof(stdin));
@@ -147,4 +162,36 @@ void turn(ROBOT* robot)
             printf("%s", "ERROR\n");
             break;
     }
+}
+
+// ------ enumToChar --------------------------
+char enumToChar(enum DIRECTION dir)
+{
+    // Switch current direction passed as argument
+    switch (dir)
+    {
+        // Return relevant character according to enum
+        case 0: return 'N';
+        case 1: return 'O';
+        case 2: return 'S';
+        case 3: return 'W';
+    }
+}
+
+// ------ isInstructionsValid --------------------------
+bool isInstructionsValid(char instructions[])
+{
+    // Initialize boolean as true
+    bool isInstructionsValid = 1;
+
+    // Iterate through the instructions string
+    for (int i = 0; i < strlen(instructions); i++) {
+        // Handles case where a character in the string is not 'm' and not 't'
+        if (instructions[i] != 'm' && instructions[i] != 't')
+        {
+            // Update boolean to false
+            isInstructionsValid = 0;
+        }
+    }
+    return isInstructionsValid;
 }
