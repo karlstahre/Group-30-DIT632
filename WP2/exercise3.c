@@ -1,7 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 2
 // Exercise 3
-// Submission code:
+// Submission code: 960059
 
 #include <stdio.h>
 #include <string.h> // Library used for strcmp and strcpy
