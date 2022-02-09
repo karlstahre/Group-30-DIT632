@@ -1,5 +1,4 @@
-// TODO: add comments and header with our names
-
+//TODO: add comments and headers with our names
 const int row1 = 11;
 const int row2 = 10;
 const int row3 = 9;
@@ -12,12 +11,18 @@ const int column4 = 4;
 const int ROW_NUM = 4; //four rows
 const int COLUMN_NUM = 4; //four columns
 
+char rows[ROW_NUM] = {row1, row2, row3, row4};
+char columns[COLUMN_NUM] = {column1, column2, column3, column4};
+
 char keypad[ROW_NUM][COLUMN_NUM] = {
   {'1','2','3','A'},
   {'4','5','6','B'},
   {'7','8','9','C'},
   {'*','0','#','D'}
 };
+
+char previousInput = UNUSED_CHAR;
+int counter = 0;
 
 void setup()
 {
@@ -28,101 +33,44 @@ void setup()
 
 void loop()
 {
+    
     readRows();
     delay(1000);
 }
 
 void readRows()
 {
-  /*
-  for (int row = 0; row < sizeof keypad; row++)
+  // Iterating throught the row pins
+  for (int row = 0; row < ROW_NUM; row++)
   {
-    for (int col = 0; col < sizeof keypad[row]; col++)
+    // Iterating through the column pins
+    for (int col = 0; col < COLUMN_NUM; col++)
     {
-      delay(1000);
-      PORTB = B00000111;
-      if (digitalRead(column1) == LOW)
-      {
-         Serial.println(keypad[row][col]);
-      }
-      else if (digitalRead(column2) == LOW)
+      PORTB = selectRow(row);
+      if (digitalRead(columns[col]) == LOW)
       {
          Serial.println(keypad[row][col]);
       }
     }
   }
-  */
-    
-  Serial.print(sizeof keypad);
-  PORTB = B00000111;
-  if (digitalRead(column1) == LOW)
-  {
-    Serial.println(keypad[0][0]);
-  }
-  else if (digitalRead(column2) == LOW)
-  {
-    Serial.println(keypad[0][1]);
-  }
-  else if (digitalRead(column3) == LOW)
-  {
-    Serial.println(keypad[0][2]);
-  }
-    else if (digitalRead(column4) == LOW)
-  {
-    Serial.println(keypad[0][3]);
-  }
+}
 
-  PORTB = B00001011;
-    if (digitalRead(column1) == LOW)
+byte selectRow(int currentRow)
+{
+  if (rows[currentRow] == row1)
   {
-    Serial.println(keypad[1][0]);
+    return B00000111;
   }
-  else if (digitalRead(column2) == LOW)
+  else if (rows[currentRow] == row2)
   {
-    Serial.println(keypad[1][1]);
+    return B00001011;
   }
-  else if (digitalRead(column3) == LOW)
+  else if (rows[currentRow] == row3)
   {
-    Serial.println(keypad[1][2]);
+    return B00001101;
   }
-    else if (digitalRead(column4) == LOW)
+  else if (rows[currentRow] == row4)
   {
-    Serial.println(keypad[1][3]);
-  }
-  
-  PORTB = B00001101;
-  if (digitalRead(column1) == LOW)
-  {
-    Serial.println(keypad[2][0]);
-  }
-  else if (digitalRead(column2) == LOW)
-  {
-    Serial.println(keypad[2][1]);
-  }
-  else if (digitalRead(column3) == LOW)
-  {
-    Serial.println(keypad[2][2]);
-  }
-    else if (digitalRead(column4) == LOW)
-  {
-    Serial.println(keypad[2][3]);
-  }
-    
-  PORTB = B00001110;
-  if (digitalRead(column1) == LOW)
-  {
-    Serial.println(keypad[3][0]);
-  }
-  else if (digitalRead(column2) == LOW)
-  {
-    Serial.println(keypad[3][1]);
-  }
-  else if (digitalRead(column3) == LOW)
-  {
-    Serial.println(keypad[3][2]);
-  }
-    else if (digitalRead(column4) == LOW)
-  {
-    Serial.println(keypad[3][3]);
+    return B00001110;
   }
 }
