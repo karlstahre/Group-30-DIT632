@@ -1,28 +1,29 @@
-//TODO: add comments and header with our names
-/* constants */
-const int TEMP_SENSOR = 0; 	// Analog pin for temperature sensor
-const int OFFSET = 50;
+// (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
+// Work package 3
+// Exercise 2 part 2
+// Submission code:
+
+// constants
+const int TEMP_SENSOR = 0; 	                            // Analog pin for temperature sensor
+const int OFFSET = 50;                                  // Used for conversion from volt to Celsius
 
 // variable numbers
-double currentTemp = 0;	// Initialize temperature value
+double currentTemp = 0;	                                // Initialize temperature value
 
 void setup()
 {
-  Serial.begin(9600);
-  pinMode(TEMP_SENSOR, INPUT);	// set tempSensor as INPUT
+  Serial.begin(9600);                                   // set up serial communication
+  pinMode(TEMP_SENSOR, INPUT);	                        // set tempSensor as INPUT
 }
 
 void loop()
 {
-  //TODO: add comments
-  currentTemp = toCelsius(analogRead(TEMP_SENSOR));
-  Serial.println(currentTemp);
-  
-  delay(500); // Wait for 1000 millisecond(s)
+  currentTemp = toCelsius(analogRead(TEMP_SENSOR));     // reads temperature measurement
+  Serial.println(currentTemp);                          // tests measurement
+  delay(500);                                           // Wait for half of a second
 }
 
-//TODO: add comments
-double toCelsius(double rawReading)
+double toCelsius(double rawReading)                     // calculates temperature from voltage measurement
 {
   return (rawReading*500/1023) - OFFSET;
 }
