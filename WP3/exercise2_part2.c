@@ -25,5 +25,5 @@ void loop()
 
 double toCelsius(double rawReading)                     // calculates temperature from voltage measurement
 {
-  return (rawReading*500/1023) - OFFSET;
+  return (rawReading*500/1023) - OFFSET;                // This formula calculates the celcius equivalent of measured voltage
 }
