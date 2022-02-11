@@ -55,12 +55,12 @@ void loop()
 
 double toCelsius(double rawReading)					// calculates the temperature in degres Celsius
 {
-  return (rawReading*500/1023) - OFFSET;
+  return (rawReading*500/1023) - OFFSET;                                // This formula calculates the celcius equivalent of measured voltage
 }
 
 double toLightPercentage(int rawReading)				// calculates light intensity in percentage
 {
-  return rawReading * K;
+  return rawReading * K;						// This formula calculates the percentage equivalent of measured light intensity
 }
     
 // checks the dependency between temperature and light intensity
