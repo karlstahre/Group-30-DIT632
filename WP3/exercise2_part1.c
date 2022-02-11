@@ -1,7 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 3
 // Exercise 2 part 1
-// Submission code:
+// Submission code: 185160
 
 /* constants */
 const int TEMP_SENSOR = 0; 		// Analog pin for temperature sensor
