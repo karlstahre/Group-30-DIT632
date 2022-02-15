@@ -17,6 +17,7 @@
 const int US_TRIG_PIN = 2;		// Ultrasonic sensor trigger pin
 const int US_ECHO_PIN = 3;		// Ultrasonic sensor echo pin
 const int STRIP_LED_PIN = 8;	// NeoPixel strip led pin
+const int STANDARD_LED_PIN = 9;	// Standard led pin used to indicate no more available leds in strip
 
 //TODO:
 //optional: speaker pin
@@ -44,9 +45,11 @@ void setup()
   Serial.begin(9600);             // Start serial communication
   pinMode(US_TRIG_PIN, OUTPUT);   // Set trigger pin as output
   pinMode(US_ECHO_PIN, INPUT);    // Set echo pin as input
+  pinMode(STANDARD_LED_PIN, OUTPUT); // Set standard led as output
 
   strip.begin();				  // Set NeoPixel strip as output
   strip.show();					  // Initialize all LEDs off
+  // TODO: maybe add attachInterrupt here.
 }
 
 void loop()
@@ -58,7 +61,8 @@ void loop()
   ledsToGlow = map(distance, MIN_DIST, MAX_DIST, 1, LED_NO);
   
   //TODO Optional: make sound with speaker
-  updateStrip(ledsToGlow);
+  // Update leds on strip and standard led
+  updateLeds(ledsToGlow);
   
   strip.clear();	// Turn all LEDs off
   
@@ -86,18 +90,22 @@ int readDistance()
 }
 
 // This method takes the amount of LEDs to glow as parameter
-// And uses it to update the NeoPixel strip
-void updateStrip(int ledsToGlow)
+// And uses it to update the NeoPixel strip and the standard led pin
+void updateLeds(int ledsToGlow)
 {
+  Serial.println(ledsToGlow);
   // Handles case where more than available LEDs should be turned on
   if (ledsToGlow > LED_NO)
   {
-    strip.setPixelColor(0, RED);	  // Turn on first LED with colour red
+    strip.fill(BLUE, 0, LED_NO);			// Turn on first LED with colour red
+    digitalWrite(STANDARD_LED_PIN, HIGH);	// Turn on standard LED since all available LEDs are used
   }
   // Handles case where available LEDs should be turned on
   else
   {
-    strip.fill(BLUE, 0, ledsToGlow);  // Turn on LEDs from index 0 to ledsToGlow with colour blue
+    strip.fill(BLUE, 0, ledsToGlow);  		// Turn on LEDs from index 0 to ledsToGlow with colour blue
+  	digitalWrite(STANDARD_LED_PIN, LOW); 	// Turn off standard LED when not necessary
   }
   strip.show();		// Update LEDs on strip
 }
+
