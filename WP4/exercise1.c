@@ -41,8 +41,8 @@ void loop()
 {
   updateTempState(); // Function call to update the state of the temperature sensor
   // Function call to use interrupts, sets the digital pin 3 to interrupt
-  // calls the function readTemp and the mode is set to RISING so that
-  // the interrupt happens when the pin state goes from LOW to HIGH
+  // calls the ISR function readTemp and the mode is set to RISING so that
+  // the interrupt triggers when the pin state goes from LOW to HIGH
   attachInterrupt(digitalPinToInterrupt(TEMP), readTemp, RISING);
   updateLeds(); // Function call to light the LEDs
   delay(10);
