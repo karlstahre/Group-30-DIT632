@@ -1,6 +1,4 @@
 // TODO: add submission code
-// TODO: remove questions
-// TODO (optional): add speaker
 
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 4
@@ -18,15 +16,13 @@ const int US_TRIG_PIN = 2;		// Ultrasonic sensor trigger pin
 const int US_ECHO_PIN = 3;		// Ultrasonic sensor echo pin
 const int STRIP_LED_PIN = 8;	// NeoPixel strip led pin
 const int STANDARD_LED_PIN = 9;	// Standard led pin used to indicate no more available leds in strip
-
-//TODO:
-//optional: speaker pin
+const int SPEAKER_PIN = 13;		// Speaker pin used together with standard led pin
 
 const double SOUND_SPEED = 0.034;	// Speed of sound in cm/ms
 const int MIN_DIST = 3;			    // Minimum distance measured accurately by US sensor in cm
 const int MAX_DIST = 300;			// Maximum distance measured accurately by US sensor in cm
 const int LED_NO = 12; 		 		// Amount of LEDs in NeoPixel strip
-
+const int MEASUREMENT_INTERVAL = 500;	// Interval of 500ms between measurements
 // Variables
 long duration;		// Used for travel time in US distance measurements
 int distance;		// Used for storing distance in US distance measurements
@@ -46,10 +42,10 @@ void setup()
   pinMode(US_TRIG_PIN, OUTPUT);   // Set trigger pin as output
   pinMode(US_ECHO_PIN, INPUT);    // Set echo pin as input
   pinMode(STANDARD_LED_PIN, OUTPUT); // Set standard led as output
-
+  pinMode(SPEAKER_PIN, OUTPUT);		 // Set speaker pin as output
+  
   strip.begin();				  // Set NeoPixel strip as output
   strip.show();					  // Initialize all LEDs off
-  // TODO: maybe add attachInterrupt here.
 }
 
 void loop()
@@ -60,14 +56,13 @@ void loop()
   // Use map function to return how many LEDs to turn on
   ledsToGlow = map(distance, MIN_DIST, MAX_DIST, 1, LED_NO);
   
-  //TODO Optional: make sound with speaker
-  // Update leds on strip and standard led
-  updateLeds(ledsToGlow);
+  // Update leds on strip, standard led, and speaker
+  updateOutputs(ledsToGlow);
   
-  strip.clear();	// Turn all LEDs off
+  // Turn all LEDs off
+  strip.clear();	
   
-  //QUESTION: Should I put a delay at the end of the loop? is it dangerous without?
-  delay(500);
+  delay(MEASUREMENT_INTERVAL);
 }
 
 // This method reads the distance of the object and updates the distance variable
@@ -90,8 +85,9 @@ int readDistance()
 }
 
 // This method takes the amount of LEDs to glow as parameter
-// And uses it to update the NeoPixel strip and the standard led pin
-void updateLeds(int ledsToGlow)
+// And uses it to update the NeoPixel strip, the standard led pin
+// and the speaker state
+void updateOutputs(int ledsToGlow)
 {
   Serial.println(ledsToGlow);
   // Handles case where more than available LEDs should be turned on
@@ -99,13 +95,14 @@ void updateLeds(int ledsToGlow)
   {
     strip.fill(BLUE, 0, LED_NO);			// Turn on first LED with colour red
     digitalWrite(STANDARD_LED_PIN, HIGH);	// Turn on standard LED since all available LEDs are used
+    digitalWrite(SPEAKER_PIN, HIGH);		// Turn on speaker since all available LEDs are used
   }
   // Handles case where available LEDs should be turned on
   else
   {
     strip.fill(BLUE, 0, ledsToGlow);  		// Turn on LEDs from index 0 to ledsToGlow with colour blue
   	digitalWrite(STANDARD_LED_PIN, LOW); 	// Turn off standard LED when not necessary
+    digitalWrite(SPEAKER_PIN, LOW);		    // Turn off speaker when not necessary
   }
   strip.show();		// Update LEDs on strip
 }
-
