@@ -7,9 +7,9 @@
 #include <Servo.h>
 
 //MACROS
+//TODO: make macros for 30 seconds
 #define HALF_MINUTE_MARK 180       // marks the degrees the servo shaft will be turned at the half minute mark
 #define MINUTE_MARK 0       // marks the degrees the servo shaft will be turned at the whole minute mark
-#define SECOND_INTERVAL 6       // the number of degrees the shaft will turn per second
 #define PIN 3       // the Arduino board pin connected to the micro servo motor
 #define SPEED 9600       // data rate in bits per second of serial data transmission
 #define MIN_PULSE_WIDTH 500       // the pulse width, in microseconds, corresponding to the angle on the servo at the 
@@ -20,7 +20,7 @@
 
 void printSeconds();       // declares the printSeconds() function
 
-int pos;       // variable for storing current degree of the servo while running the program
+int pos = 0;       // variable for storing current degree of the servo while running the program
 int counter = 0;       // variable for storing number of seconds counted by the timer
 Servo servo_9;       // declares the motor variable from the Servo.h library
 
@@ -32,26 +32,29 @@ void setup()
 
 void loop()
 {
-  // moves the servo from 0 to 180 degrees in 6 degrees increments to represent the arms of a clockwork
-  for (pos = MINUTE_MARK; pos < HALF_MINUTE_MARK; pos += SECOND_INTERVAL)
+  servo_9.write(pos);
+  printSeconds();
+  // TODO: use macros instead of numbers here
+  if (counter == 60)
   {
-    // tell servo to go to position in variable 'pos'
-    servo_9.write(pos);       //
-    printSeconds();       //
+    counter = 0;
   }
-         //
-  for (pos = HALF_MINUTE_MARK; pos > MINUTE_MARK; pos -= SECOND_INTERVAL)
+  // TODO: use macros instead of numbers here
+  if (counter <= 30)
   {
-    // tell servo to go to position in variable 'pos'
-    servo_9.write(pos);       //
-    printSeconds();       //
+    pos = map(counter, 0, 30, 0, 180);
   }
+  else 
+  {
+    pos = map(counter, 30, 60, 180, 0);
+  }
+  Serial.println(pos);
 }
 
        //
 void printSeconds()
 {
-  delay(ONE_SECOND);       //
+  delay(ONE_SECOND);      //
   counter++;       //
   Serial.println(counter);       //
 }
