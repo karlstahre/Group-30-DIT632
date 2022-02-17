@@ -47,7 +47,6 @@ void loop()
   {
     pos = map(counter, HALF_MINUTE, ONE_MINUTE, HALF_MINUTE_MARK, MINUTE_MARK);    // maps the angle of the shaft for the second half minute
   }
-  Serial.println(pos);                                                             // prints shaft angle to console
 }
 
 void printSeconds()           // this function prints the current second 
