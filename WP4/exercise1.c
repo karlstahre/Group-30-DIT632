@@ -1,7 +1,7 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 4
 // Exercise 1
-// Submission code:
+// Submission code: 648664
 
 /*
  *  Interrupt and PWM utilities for 16 bit Timer1 on ATmega168/328
@@ -272,8 +272,6 @@ const int TEMP_30 = 30;
 const int TEMP_40 = 40;
 const int TEMP_50 = 50;
 
-unsigned long currentMillis; // Store current time value
-unsigned long previousMillis; // Store previous time value
 double currentTemp; // Store current temperature
 
 void setup()
@@ -312,27 +310,32 @@ void updateLeds()
   // Handles case when the temperature ranges from 0 to 10
   if (currentTemp >= TEMP_0 && currentTemp <= TEMP_10)
   {
-    digitalWrite(LED1, HIGH);
+    // Turn pin 12 to HIGH
+    PORTB = B00010000;
   }
   // Handles case when the temperature ranges from 11 to 20
   else if (currentTemp > TEMP_10 && currentTemp <= TEMP_20)
   {
-    digitalWrite(LED2, HIGH);
+    // Turn pin 12, 11 to HIGH
+    PORTB = B00011000;
   }
   // Handles case when the temperature ranges from 21 to 30
   else if (currentTemp > TEMP_20 && currentTemp <= TEMP_30)
   {
-    digitalWrite(LED3, HIGH);
+    // Turn pin 12, 11, 10 to HIGH
+    PORTB = B00011100;    
   }
   // Handles case when the temperature ranges from 31 to 40
   else if (currentTemp > TEMP_30 && currentTemp <= TEMP_40)
   {
-    digitalWrite(LED4, HIGH);
+    // Turn pin 12, 11, 10, 9 to HIGH
+    PORTB = B00011110;
   }
   // Handles case when the temperature ranges from 41 to 50
   else if (currentTemp > TEMP_40 && currentTemp <= TEMP_50)
   {
-    digitalWrite(LED5, HIGH);
+    // Turn pin 12, 11, 10, 9, 8 to HIGH
+    PORTB = B00011111;
   }
   // Print the current temperature
   Serial.println(currentTemp);
