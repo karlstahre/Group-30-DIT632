@@ -5,9 +5,6 @@
 // Exercise 3
 // Submission code: xxxxxx
 
-// Credits:
-// Ultrasonic sensor code by Dejan Nedelkovski, www.HowToMechatronics.com
-
 // Libraries
 #include <Adafruit_NeoPixel.h>
 
@@ -65,7 +62,9 @@ void loop()
   delay(MEASUREMENT_INTERVAL);
 }
 
-// This method reads the distance of the object and updates the distance variable
+// Credits:
+// Ultrasonic sensor code by Dejan Nedelkovski, www.HowToMechatronics.com
+// This method reads the distance of the object and returns the distance variable
 int readDistance()
 {
   // Clear trigger pin
