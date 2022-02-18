@@ -1,9 +1,7 @@
-// TODO: add submission code
-
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 4
 // Exercise 3
-// Submission code: xxxxxx
+// Submission code: 648664
 
 // Libraries
 #include <Adafruit_NeoPixel.h>
