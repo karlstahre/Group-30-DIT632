@@ -1,7 +1,9 @@
 // (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
 // Work package 5
 // Exercise 1
-// Submission code: xxxxxx
+// Submission code: 725062
+
+// The following code has been taken from the submission of WP3 - Exercise 1 - Group 30 (2022)
 
 // constants won't change. They're used here to set pin numbers:
 const int buttonPin = 2;  // the number of the pushbutton pin
