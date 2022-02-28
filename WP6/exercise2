@@ -1,0 +1,143 @@
+// TODO: add header with names
+// TODO: add submission code
+
+// Constants
+const int LED1_PIN = 2;
+const int LED2_PIN = 3;
+const int LED3_PIN = 4;
+const int LED4_PIN = 5;
+const int US_SIG_PIN = 7;
+const int SPEAKER_PIN = 9;
+
+const double SOUND_SPEED = 0.034;	// Speed of sound (cm/microseconds)
+const int MAX_DIST = 200;   // Maximum distance measurable by US sensor (cm)
+const int MIN_DIST = 25;    // Minimum distance measurable by US sensor (cm)
+
+// TODO: Rename constant
+const int DIST_30 = 30;
+
+// Variables
+long duration;	// Used for travel time in US distance measurements
+long distance;	// Used for storing distance in US distance measurements
+// TODO: delete if not necessary
+// int ledsToGlow;	// Indicates how many LEDs to turn on
+
+void setup()
+{
+  Serial.begin(9600);
+  
+  // Set LED pins as OUTPUT
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED3_PIN, OUTPUT);
+  pinMode(LED4_PIN, OUTPUT);
+
+  // TODO: do we need to setup the sensor here? Since 
+  // we change its mode in the readDistance();
+  // pinMode(US_SIG_PIN, //TODO: Check US documentation);
+
+  // Set Speaker pin as OUTPUT
+  pinMode(SPEAKER_PIN, OUTPUT);
+
+}
+
+void loop()
+{
+  // TODO: continue on the loop
+  readDistance();
+  controlLeds();
+  //controlSpeaker();
+  delay(1000);
+
+}
+
+// TODO: check method returning long comment this method
+void readDistance()
+{
+  // TODO: add code according to descriptions
+  
+  
+  // Listen to input if some echo returns. The time until the echo returns is related to the distance of the
+  // object from which the ping reflected.
+  // Set US Pin to Output.
+  pinMode(US_SIG_PIN, OUTPUT);
+  // Write a zero to the output to clear the system. Wait 2 microseconds
+  digitalWrite(US_SIG_PIN, LOW);
+  
+  
+  // TODO: test milliseconds
+  delayMicroseconds(2);
+  
+  
+  // Write a one to the output to send a ping. Wait 10 microseconds
+  digitalWrite(US_SIG_PIN, HIGH);
+  delayMicroseconds(10);
+  // Write a zero to the output to stop sending the ping
+  digitalWrite(US_SIG_PIN, LOW);
+  // Set Pin to Input
+  pinMode(US_SIG_PIN, INPUT);
+  // Reads the echo pin, and returns the sound wave travel time in microseconds
+  duration = pulseIn(US_SIG_PIN, HIGH);
+
+  // Distance (cm) = (Time x Speed) / 2
+  distance = (duration * SOUND_SPEED) / 2;
+}
+
+void controlLeds()
+{
+  int annoyingness;
+  
+  if (distance < MIN_DIST)
+  {
+    annoyingness = 1000;
+    // Blink all lights
+    blink();
+  } 
+  else if (distance < DIST_30)
+  {
+    annoyingness= 800;
+    // TODO: Turn on all lights
+    PORTD = B00111100;
+  }
+  else if (distance >= DIST_30 && distance <= 200)
+  {
+    // TODO: Turn on three lights
+    int ledsToTurnOn = map(distance, MAX_DIST, DIST_30, 1, 3);
+    if (ledsToTurnOn == 3)
+    {
+      annoyingness = 600;
+      PORTD = B00111000;
+    }
+    else if (ledsToTurnOn == 2)
+    {
+      annoyingness = 400;
+      PORTD = B00110000;
+    }
+    else if (ledsToTurnOn == 1)
+    {
+      annoyingness = 200;
+      PORTD = B00100000;
+    }
+  }
+  else
+  {
+    // Turn off all lights
+    PORTD = B00000000;
+    annoyingness = 0;
+  }
+  speaker(annoyingness);
+}
+
+void blink()
+{
+  PORTD = B00111100;
+  delay(10);
+  PORTD = B00000000;
+  delay(10);
+}
+
+void speaker(int annoyingness)
+{
+  tone(SPEAKER_PIN, annoyingness);
+}
+
