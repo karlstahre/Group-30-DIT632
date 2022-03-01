@@ -1,7 +1,11 @@
-// TODO: add header with names
+// (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
+// Work package 6
+// Exercise 2
+// Submission code:
 // TODO: add submission code
 
 // Constants
+// Initialize the components to their corresponding pins
 const int LED1_PIN = 2;
 const int LED2_PIN = 3;
 const int LED3_PIN = 4;
@@ -13,65 +17,65 @@ const double SOUND_SPEED = 0.034;	// Speed of sound (cm/microseconds)
 const int MAX_DIST = 200;   // Maximum distance measurable by US sensor (cm)
 const int MIN_DIST = 25;    // Minimum distance measurable by US sensor (cm)
 
-// TODO: Rename constant
-const int DIST_30 = 30;
+// Define and initialize a range for distance in cm
+const int DIST_30_CM = 30;
+const int DIST_100_CM = 100;
+const int DIST_150_CM = 150;
+
+// Define and initialize a range for the tone in herz
+const int HERZ_1000 = 1000;
+const int HERZ_800 = 800;
+const int HERZ_600 = 600;
+const int HERZ_400 = 400;
+const int HERZ_200 = 200;
+const int HERZ_0 = 0;
 
 // Variables
 long duration;	// Used for travel time in US distance measurements
 long distance;	// Used for storing distance in US distance measurements
-// TODO: delete if not necessary
-// int ledsToGlow;	// Indicates how many LEDs to turn on
+
+int annoyingness; // Used in the tone function for the speaker, stores herz
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600); // Initialize serial communication
   
   // Set LED pins as OUTPUT
   pinMode(LED1_PIN, OUTPUT);
   pinMode(LED2_PIN, OUTPUT);
   pinMode(LED3_PIN, OUTPUT);
   pinMode(LED4_PIN, OUTPUT);
-
-  // TODO: do we need to setup the sensor here? Since 
-  // we change its mode in the readDistance();
-  // pinMode(US_SIG_PIN, //TODO: Check US documentation);
-
   // Set Speaker pin as OUTPUT
   pinMode(SPEAKER_PIN, OUTPUT);
-
+  
+   // Ultrasonic sensor is set in the readDistance() function
 }
 
 void loop()
 {
-  // TODO: continue on the loop
+  // Function calls
   readDistance();
-  speaker(controlLeds());
-  //controlSpeaker();
-  delay(1000);
-
+  controlLeds();
+  speaker();
+  // Delay needed to not optimize the simulation on Tinkercad 
+  delay(10);
 }
 
-// TODO: check method returning long comment this method
+// This function computes the distance from the objects and updates distance variable
 void readDistance()
-{
-  // TODO: add code according to descriptions
-  
-  
+{  
   // Listen to input if some echo returns. The time until the echo returns is related to the distance of the
   // object from which the ping reflected.
   // Set US Pin to Output.
   pinMode(US_SIG_PIN, OUTPUT);
   // Write a zero to the output to clear the system. Wait 2 microseconds
   digitalWrite(US_SIG_PIN, LOW);
-  
-  
-  // TODO: test milliseconds
   delayMicroseconds(2);
-  
   
   // Write a one to the output to send a ping. Wait 10 microseconds
   digitalWrite(US_SIG_PIN, HIGH);
   delayMicroseconds(10);
+  
   // Write a zero to the output to stop sending the ping
   digitalWrite(US_SIG_PIN, LOW);
   // Set Pin to Input
@@ -83,90 +87,100 @@ void readDistance()
   distance = (duration * SOUND_SPEED) / 2;
 }
 
-// TODO: fix magic numbers?
-int controlLeds()
+// This function turns on or off the LEDs depending on the distance range
+void controlLeds()
 {
-  int annoyingness;
-  
+  // When distance is less than 25
   if (distance < MIN_DIST)
   {
-    annoyingness = 1000;
     // Blink all lights
     blink();
   } 
-  else if (distance < DIST_30)
+  // When distance is less than 30
+  else if (distance < DIST_30_CM)
   {
-    annoyingness= 800;
-    // TODO: Turn on all lights
+    // Turn on all lights
     PORTD = B00111100;
   }
-  else if (distance >= 30 && distance < 100)
+  // When distance is between 30 and 99
+  else if (distance >= DIST_30_CM && distance < DIST_100_CM)
   {
-      annoyingness = 600;
-      PORTD = B00111000;
+    // Turn on three lights
+    PORTD = B00111000;
   }
-  else if (distance >= 100 && distance < 150)
+  // When distance is between 100 and 149
+  else if (distance >= DIST_100_CM && distance < DIST_150_CM)
   {
-      annoyingness = 400;
-      PORTD = B00110000;
+    // Turn on two lights
+    PORTD = B00110000;
   }
-      else if (distance >= 150 && distance <= 200)
+  // When distance is between 150 and 200
+  else if (distance >= DIST_150_CM && distance <= MAX_DIST)
   {
-      annoyingness = 200;
-      PORTD = B00100000;
+    // Turn on one light
+    PORTD = B00100000;
   }
-  
-  // TODO: fix map or remove?
-  /*
-  else if (distance >= DIST_30 && distance <= 200)
-  {
-
-    // TODO: Turn on three lights
-    int ledsToTurnOn = map(distance, MAX_DIST, DIST_30, 1, 3);
-    if (ledsToTurnOn == 3)
-    {
-      annoyingness = 600;
-      PORTD = B00111000;
-    }
-    else if (ledsToTurnOn == 2)
-    {
-      annoyingness = 400;
-      PORTD = B00110000;
-    }
-    else if (ledsToTurnOn == 1)
-    {
-      annoyingness = 200;
-      PORTD = B00100000;
-    }
-    
-  }
-  */
+  // When distance less than 25 and greater than 200
   else
   {
     // Turn off all lights
     PORTD = B00000000;
-    annoyingness = 0;
   }
-  return annoyingness;
 }
 
+// This function makes the four LEDs blink
 void blink()
 {
-  PORTD = B00111100;
-  delay(10);
-  PORTD = B00000000;
-  delay(10);
+  PORTD = B00111100; // Turn on all LEDs
+  delay(100);
+  PORTD = B00000000; // Turn off all LEDs
+  delay(100);
 }
 
-void speaker(int annoyingness)
-{
-  if (annoyingness == 0)
-  { 
-    noTone(SPEAKER_PIN);
+// This function changes the herz of the tone of the speaker depending on
+// the distance range
+// The tone becomes more annoying the closer the distance is
+void speaker()
+{ 
+  // When distance is less than 25
+  if (distance < MIN_DIST)
+  {
+    annoyingness = HERZ_1000;
   } 
+  // When distance is less than 30
+  else if (distance < DIST_30_CM)
+  {
+    annoyingness = HERZ_800;
+  }
+  // When distance is between 30 and 99
+  else if (distance >= DIST_30_CM && distance < DIST_100_CM)
+  {
+    annoyingness = HERZ_600;
+  }
+  // When distance is between 100 and 149
+  else if (distance >= DIST_100_CM && distance < DIST_150_CM)
+  {
+    annoyingness = HERZ_400;
+  }
+  // When distance is between 150 and 200
+  else if (distance >= DIST_150_CM && distance <= MAX_DIST)
+  {
+    annoyingness = HERZ_200;
+  }
+  // When distance less than 25 and greater than 200
   else
   {
-    tone(SPEAKER_PIN, annoyingness);
+    annoyingness = HERZ_0; 
+  }
+  
+  // Handles case when the speaker should be quiet
+  if (annoyingness == HERZ_0)
+  {
+    noTone(SPEAKER_PIN); // Turn off the tone
+  }
+  // Handles case when the speaker should sound
+  else
+  {
+    tone(SPEAKER_PIN, annoyingness); // Adjust the tone according to the herz
   }
 }
-
