@@ -1,12 +1,19 @@
-// TODO: add header with name
-// TODO: add submission code
+// (C) Maja Linder, Karl Stahre, Gianmarco Iachella group: 30 (2022)
+// Work package 6
+// Exercise 1
+// Submission code: 771088
 
-#define ENCA 2
-#define ENCB 3
-#define PWM1 5
-#define PWM2 6
+// Power Supply values used:
+// Voltage = 5
+// Current = 1.1
+
+// Definition of pins
+#define ENCA 2 	// Encoder-A pin
+#define ENCB 3  // Encoder-B pin
+#define PWM1 5	// PWM1 pin
+#define PWM2 6	// PWM2 pin
  
-int pos = 0; // Position in ticks
+volatile int pos = 0; // Position in ticks. Volatile because used in ISR.
 int deg = 0; // Position in degrees
 
 int degtarget = 0; // Target position in degrees
@@ -20,6 +27,8 @@ int e = 0; // error
 int a = 0; // a-encoder signal
 int b = 0; // b-encoder signal
 
+void ISR_readEncoder();
+
 void setup() {
  
   Serial.begin(9600);
@@ -28,12 +37,8 @@ void setup() {
   pinMode(PWM1,OUTPUT);
   pinMode(PWM2,OUTPUT);  
   
-  /*
-  ==> TO DO TO DO TO DO
-  ATTACH INTERRUPT HERE.
-  */
   // Trigger ISR on RISING of ENCA (when receiving signal from encoder)
-  attachInterrupt(digitalPinToInterrupt(ENCA),readEncoder,RISING);
+  attachInterrupt(digitalPinToInterrupt(ENCA),ISR_readEncoder,RISING);
   
   // Start the motor, just a tiny little bit because otherwise TinkerCad dies....
   analogWrite(PWM2, 10); 
@@ -47,7 +52,7 @@ void loop() {
   delay(1000); // TinkerCad...bug
   analogWrite(PWM2, 10);
   
-   // Check if motor rotated all the way around, and reset counter
+  // Check if motor rotated all the way around, and reset counter
     if (pos > 2299){
       deg = deg - 359;
       pos = pos - 2299;
@@ -65,15 +70,24 @@ void loop() {
   // Get input 
   degtarget = getInput();
   
-  // Calculate initial error
-  e = degtarget - deg;
-    
+  // Calculate initial error.
+  // When calculating e, deg and degtarget have been swapped
+  // according to assignment description.
+  e = deg - degtarget;
+  
+  // Print error
+  Serial.print("Initial error: ");
+  Serial.println(e);
+  
   // Loop until error is zero
   while(e){
     
+    // Printing the error as it decreases
+    Serial.println(e);
+    
     // Map current position into degrees
     deg = map(pos,0,2299,0,359);
-        
+       
   	// Get necessary speed signal
   	speed = getAction(e);
     
@@ -95,7 +109,7 @@ void loop() {
     }
 	
     // Calculate new error
-  	e = degtarget - deg;
+  	e = deg - degtarget;
   }
 }
 
@@ -116,10 +130,9 @@ int getInput(){
 }  
 
 int getAction(int error){
-  /*
-  ==> TO DO TO DO TO DO
-  Calculate u_out as function of the error and the kp (tuning parameter).
-  */
+  
+  //Calculate u_out as function of the error and the kp (tuning parameter).
+  u_out = kp * error;
   
   if (u_out > 254){ //u_out cannot be more than 255...
   	return 255;
@@ -131,17 +144,22 @@ int getAction(int error){
      return u_out;
 }
 
-// This method reads the encoder signals 
-// and increases or decreases pos accordingly.
+// This method reads the encoder signals and increase or decrease pos accordingly.
+// pos increases when both signals are high,
+// pos decreases when signals are different,
+// since the clockwise movement of the motor corresponds
+// to negative rpm according to TinkerCad, and vice-versa.
 void ISR_readEncoder(){
   
-  int b = digitalRead(ENCB); // Read the status of ENCB
-  // Handles case where ENCB was already HIGH when the ISR function was called
-  if(b > 0){
-    pos++; // Increase position
+  a = digitalRead(ENCA);	// Read state of Encoder-A
+  b = digitalRead(ENCB);	// Read state of Encoder-B
+  
+  // Handles case when b and a are both high
+  if(b == a){
+    pos++;	// Increase position
   }
-  // Handles case where ENCB was already HIGH when the ISR function was called
+  // Handles case when b and a are different values
   else{
-    pos--; // Decrease position
+    pos--;	// Decrease position
   }
 }
