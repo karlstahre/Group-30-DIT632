@@ -109,7 +109,9 @@ void loop() {
     }
 	
     // Calculate new error
-  	e = deg - degtarget;
+    // When calculating e, deg and degtarget have been swapped
+    // according to assignment description.
+    e = deg - degtarget;
   }
 }
 
